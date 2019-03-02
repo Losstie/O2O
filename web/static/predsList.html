@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>预测详情</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="预测详情列表">
+    <meta name="author" content="基于大数据的O2O优惠券使用预测">
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/lib/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome-->
+    <link href="css/modules/font-awesome.min.css" rel="stylesheet">
+
+
+    <!-- Color box-->
+    <link href="css/modules/colorbox/colorbox.css" rel="stylesheet">
+
+    <!--dataTables -->
+    <link rel="stylesheet" href="css/modules/jquery.dataTables_themeroller.css">
+
+    <!-- Endless -->
+    <link href="css/modules/endless.min.css" rel="stylesheet">
+    <link href="css/modules/endless-skin.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/lib/jquery-ui.css" >
+    <style>
+        .table thead>tr>th,
+        .table tbody>tr>td{
+            text-align: center;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="overflow-hidden">
+
+<div id="wrapper" class="preload">
+    <div id="top-nav" class="skin-6 fixed">
+        <div class="brand">
+            <span>O2O优惠券使用预测</span>
+            <span class="text-toggle"> 管理端</span>
+            <!-- <img src="" alt=""> -->
+
+        </div><!-- /brand -->
+
+
+    </div><!-- /top-nav-->
+
+    <aside class="fixed skin-6">
+        <div class="sidebar-inner scrollable-sidebar">
+            <div class="size-toggle">
+                <a class="btn btn-sm" id="sizeToggle">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="btn btn-sm pull-right logoutConfirm_open"  href="#logoutConfirm">
+                    <i class="fa fa-power-off"></i>
+                </a>
+            </div><!-- /size-toggle -->
+            <div class="user-block clearfix">
+                <img src="img/happy.jpg" alt="User Avatar">
+                <div class="detail">
+                    <strong id="J_admin-name">O2O优惠券使用预测</strong><span class="badge badge-danger bounceIn animation-delay4 m-left-xs">4</span>
+                    <ul class="list-inline">
+                        <!--<li><a href="inbox.html" class="no-margin">我的消息</a></li>-->
+                        <li><a href="javascript:alert('暂未开放');" class="no-margin">我的消息</a></li>
+                    </ul>
+                </div>
+            </div><!-- /user-block -->
+
+            <div class="main-menu">
+                <ul>
+                    <li>
+                        <a href="/predsList.html">
+								<span class="menu-icon">
+									<i class="fa fa-file-text fa-lg"></i>
+								</span>
+                            <span class="text">
+									预测数据管理
+								</span>
+                            <span class="menu-hover"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/showTrainAuc.html">
+								<span class="menu-icon">
+									<i class="fa fa-file-text fa-lg"></i>
+								</span>
+                            <span class="text">
+									训练曲线
+								</span>
+                            <span class="menu-hover"></span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="alert alert-info">
+                    欢迎来到O2O优惠券使用预测管理端，如有建议请联系开发！
+                </div>
+            </div><!-- /main-menu -->
+        </div><!-- /sidebar-inner scrollable-sidebar -->
+    </aside>
+
+
+    <div id="main-container">
+        <!--顶部导航链-->
+        <div id="breadcrumb">
+            <ul class="breadcrumb">
+                <li><i class="fa fa-home"></i>基于大数据的O2O优惠券使用预测数据展示</li>
+                <li class="active">预测数据详情</li>
+            </ul>
+        </div>
+        <div class="padding-md">
+
+            <!--查询面板-->
+            <div class="panel panel-default">
+                <div class="panel-heading">详情查询</div>
+                <div class="panel-body">
+                    <form class="form-horizontal" id="searchForm" >
+
+
+                        <!--导师姓名/运营人员-->
+                        <div class="form-group row">
+
+                            <div class="col-md-4">
+                                <label for="J_userId" class="col-lg-3 control-label">用户ID</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control input-sm" id="J_userId" name="J_userId" placeholder="用户ID">
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-5">
+                                <label for="J_couponId" class="col-lg-3 control-label">优惠券ID</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control input-sm" placeholder="优惠券ID" id="J_couponId" name="J_couponId">
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--领取优惠券时间-->
+                        <div class="form-group row">
+                            <div class="col-md-5">
+                                <label class="col-lg-3 control-label">领取优惠券时间</label>
+
+                                <div class="col-lg-6">
+                                    <div class="input-group date">
+                                        <input type="text" placeholder="y-m-d" class="date-picker form-control" id="J_dateReceivedTime">
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                        </div>
+                        <!-- /form-group -->
+
+                        <!--查询按钮-->
+                        <div class="form-group row">
+                            <div class="col-lg-offset-1 col-lg-4">
+                                <button type="submit" class="col-lg-offset-1 btn btn-success btn-sm" id="J_search">查询</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- 展示面板 -->
+            <div class="panel panel-default table-responsive">
+                <div class="panel-heading">
+                    详情 列表
+                    <span class="label label-info pull-right"><span id="J_count"></span> 条数据</span>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped" id="responsiveTable">
+                        <thead>
+                        <tr>
+                            <th>User_id</th>
+                            <th>Coupon_id</th>
+                            <th>Date_received</th>
+                            <th>Probability</th>
+                        </tr>
+                        </thead>
+                        <tbody id="J_show">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer clearfix" id="page_wrap">
+                </div>
+            </div>
+        </div><!-- /.padding-md -->
+    </div><!-- /main-container -->
+    <footer>
+        <div class="row">
+            <div class="col-sm-6">
+					<span class="footer-brand">
+						<strong class="text-danger">Endless</strong> Admin
+					</span>
+                <p class="no-margin">
+                    © 2013 <strong>Endless Admin</strong>. ALL Rights Reserved.
+                </p>
+            </div><!-- /.col -->
+        </div><!-- /.row-->
+    </footer>
+</div><!-- /wrapper -->
+
+<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
+
+<!-- Logout confirmation -->
+<div class="custom-popup width-100" id="logoutConfirm" style="display:none;">
+    <div class="padding-md">
+        <h4 class="m-top-none"> 确定要注销吗？</h4>
+    </div>
+
+    <div class="text-center">
+        <a class="btn btn-success m-right-sm" href="login.html" id="J_logout">注销</a>
+        <a class="btn btn-danger logoutConfirm_close">取消</a>
+    </div>
+</div>
+
+<script src="js/lib/r.js" data-main="js/page/predsMange/predsList"></script>
+</body>
+</html>
