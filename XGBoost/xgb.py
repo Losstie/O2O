@@ -15,6 +15,7 @@ import time
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
 from pylab import mpl
+
 mpl.rcParams['font.sans-serif'] = ['FangSong'] # 指定默认字体
 # 程序开始时间
 start_time = time.time()
@@ -61,11 +62,11 @@ def callback_draw(env):
 if __name__ == '__main__':
     "主函数"
 
-    dataset1 = pd.read_csv(r'F:\Project\FinaDesigner_Dujiahao\data\dataset1.csv')
+    dataset1 = pd.read_csv(r'D:\Project\Software\FinaDesigner_Dujiahao\data\dataset1.csv')
     dataset1.label.replace(-1, 0, inplace=True)
-    dataset2 = pd.read_csv(r'F:\Project\FinaDesigner_Dujiahao\data\dataset2.csv')
+    dataset2 = pd.read_csv(r'D:\Project\Software\FinaDesigner_Dujiahao\data\dataset2.csv')
     dataset2.label.replace(-1, 0, inplace=True)
-    dataset3 = pd.read_csv(r'F:\Project\FinaDesigner_Dujiahao\data\dataset3.csv')
+    dataset3 = pd.read_csv(r'D:\Project\Software\FinaDesigner_Dujiahao\data\dataset3.csv')
 
     dataset1.drop_duplicates(inplace=True)
     dataset2.drop_duplicates(inplace=True)
@@ -74,13 +75,13 @@ if __name__ == '__main__':
     dataset12 = pd.concat([dataset1, dataset2], axis=0)
 
     dataset1_y = dataset1.label
-    dataset1_x = dataset1.drop(['User_id', 'label',],axis=1)
+    dataset1_x = dataset1.drop(['User_id', 'label','user_merchant_receivedcoupon_notuse_count','user_merchant_coupon_transfer_rate','buy_use_coupon_rate','user_merchant_usecoupon_sales_rate','user_coupon_transfer_rate','coupon_rate','merchant_coupon_transfer_rate','this_day_user_received_same_coupon_count'],axis=1)
     dataset2_y = dataset2.label
-    dataset2_x = dataset2.drop(['User_id', 'label'], axis=1)
+    dataset2_x = dataset2.drop(['User_id', 'label','user_merchant_receivedcoupon_notuse_count','user_merchant_coupon_transfer_rate','buy_use_coupon_rate','user_merchant_usecoupon_sales_rate','user_coupon_transfer_rate','coupon_rate','merchant_coupon_transfer_rate','this_day_user_received_same_coupon_count'], axis=1)
     dataset12_y = dataset12.label
-    dataset12_x = dataset12.drop(['User_id', 'label'], axis=1)
+    dataset12_x = dataset12.drop(['User_id', 'label','user_merchant_receivedcoupon_notuse_count','user_merchant_coupon_transfer_rate','buy_use_coupon_rate','user_merchant_usecoupon_sales_rate','user_coupon_transfer_rate','coupon_rate','merchant_coupon_transfer_rate','this_day_user_received_same_coupon_count'], axis=1)
     dataset3_preds = dataset3[['User_id', 'Coupon_id', 'Date_received']]
-    dataset3_x = dataset3.drop(['User_id', 'Coupon_id','Date_received'], axis=1)
+    dataset3_x = dataset3.drop(['User_id', 'Coupon_id','Date_received','user_merchant_receivedcoupon_notuse_count','user_merchant_coupon_transfer_rate','buy_use_coupon_rate','user_merchant_usecoupon_sales_rate','user_coupon_transfer_rate','coupon_rate','merchant_coupon_transfer_rate','this_day_user_received_same_coupon_count'], axis=1)
     print(dataset1_x.shape, dataset2_x.shape, dataset3_x.shape)
     # 划分出验证集调参数   找出最优参数
     # x_dtrain, x_deval, y_dtrain, y_deval = train_test_split(dataset12_x, dataset12_y, random_state=1000,test_size=0.3)
@@ -97,9 +98,9 @@ if __name__ == '__main__':
     dataset2 = xgb.DMatrix(dataset2_x, label=dataset2_y)
     dataset12 = xgb.DMatrix(dataset12_x, label=dataset12_y)
     dataset3 = xgb.DMatrix(dataset3_x)
-    # watchlist = [(dataset12,'train')]
-    # model = xgb.train(params, dataset12, num_boost_round=4000, evals=watchlist,early_stopping_rounds=120)
-    # model.save_model('xgb.model')
+    watchlist = [(dataset12,'train')]
+    model = xgb.train(params, dataset12, num_boost_round=4000, evals=watchlist,early_stopping_rounds=120)
+    model.save_model('xgb.model')
 
     # 可视化
     # 绘制特征重要性条形图
@@ -124,21 +125,21 @@ if __name__ == '__main__':
 
     model = xgb.Booster(model_file='xgb.model')
     dataset3_preds['label'] = model.predict(dataset3)
-    dataset3_preds.label = MinMaxScaler().fit_transform(dataset3_preds.label.reshape(-1, 1))
+    dataset3_preds.label = MinMaxScaler().fit_transform(dataset3_preds.label.values.reshape(-1, 1))
     dataset3_preds.sort_values(by=['Coupon_id', 'label'], inplace=True)
     dataset3_preds.to_csv("xgb_preds.csv", index=None, header=None)
     print(dataset3_preds.describe())
 
     # save feature score
-    # feature_score = model.get_fscore()
-    # feature_score = sorted(feature_score.items(), key=lambda x: x[1], reverse=True)
-    # fs = []
-    # for (key, value) in feature_score:
-    #     fs.append("{0},{1}\n".format(key, value))
-    #
-    # with open('xgb_feature_score.csv', 'w') as f:
-    #     f.writelines("feature,score\n")
-    #     f.writelines(fs)
+    feature_score = model.get_fscore()
+    feature_score = sorted(feature_score.items(), key=lambda x: x[1], reverse=True)
+    fs = []
+    for (key, value) in feature_score:
+        fs.append("{0},{1}\n".format(key, value))
+
+    with open('xgb_feature_score.csv', 'w') as f:
+        f.writelines("feature,score\n")
+        f.writelines(fs)
     # 程序运行时间
     cost_time = time.time() - start_time
     print("cost_time:", cost_time)
